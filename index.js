@@ -34,7 +34,7 @@ router.route('/users').get((request, response) => {
 })
 
 router.route('/createUser').post((request, response) => {
-    let record = { ...request.body }
+    let record = {...request.body }
     dboperations.createUser(record).then(result => {
         console.log(result)
         return response.status(201).json(result);
@@ -42,7 +42,7 @@ router.route('/createUser').post((request, response) => {
 })
 
 router.route('/deleteUser').post((request, response) => {
-    let record = { ...request.body }
+    let record = {...request.body }
     dboperations.deleteUser(record).then(result => {
         console.log(result)
         return response.status(201).json(result[0]);
@@ -50,7 +50,7 @@ router.route('/deleteUser').post((request, response) => {
 })
 
 router.route('/updateUser').post((request, response) => {
-    let record = { ...request.body }
+    let record = {...request.body }
     dboperations.updateUser(record).then(result => {
         console.log(result)
         return response.status(201).json(result[0]);
@@ -74,20 +74,26 @@ router.route('/region').post((request, response) => {
     })
 })
 
+router.route('/state').post((request, response) => {
+    dboperations.getStateData(request.body.selectedRegion, request.body.state).then(result => {
+        return response.json(result[0]);
+    })
+})
+
 router.route('/hospital').post((request, response) => {
-    dboperations.getHospitalData(request.body.selectedRegion, request.body.hospitalName).then(result => {
+    dboperations.getHospitalData(request.body.selectedRegion, request.body.state, request.body.hospitalName).then(result => {
         return response.json(result[0]);
     })
 })
 
 router.route('/department').post((request, response) => {
-    dboperations.getDepartmentData(request.body.selectedRegion, request.body.hospital, request.body.department).then(result => {
+    dboperations.getDepartmentData(request.body.selectedRegion, request.body.state, request.body.hospital, request.body.department).then(result => {
         return response.json(result[0]);
     })
 })
 
 router.route('/update').put((request, response) => {
-    dboperations.updateData(request.body.record, request.body.selectedRegion, request.body.selectedHospital, request.body.selectedDept ).then(result => {
+    dboperations.updateData(request.body.record, request.body.selectedRegion, request.body.selectedHospital, request.body.selectedDept).then(result => {
         return response.json(result[0]);
     })
 })
@@ -113,7 +119,7 @@ router.route('/fhs/:id').get((request, response) => {
 })
 
 router.route('/create').post((request, response) => {
-    let record = { ...request.body }
+    let record = {...request.body }
     dboperations.createRecord(record).then(result => {
         console.log(result)
         response.status(201).json(result);
@@ -121,21 +127,20 @@ router.route('/create').post((request, response) => {
 })
 
 router.route('/delete').delete((request, response) => {
-    let record = { ...request.body }
+    let record = {...request.body }
     dboperations.deleteRecord(record).then(result => {
         response.status(201).json(result);
     })
 })
 
 router.route('/login').post((request, response) => {
-    let body = { ...request.body }
+    let body = {...request.body }
     dboperations.login(body).then(result => {
         console.log(result)
-        if(result === "User Not Found") {
+        if (result === "User Not Found") {
             return response.status(404).json(result);
-        }
-        else{
-           return response.status(201).json(result);
+        } else {
+            return response.status(201).json(result);
         }
     })
 })
@@ -152,6 +157,6 @@ router.route('/loginInfo').post((request, response) => {
     })
 })
 
-var port = process.env.PORT || 8090;
+var port = process.env.PORT || 8085;
 app.listen(port);
 console.log('Inventory API is runnning at ' + port);

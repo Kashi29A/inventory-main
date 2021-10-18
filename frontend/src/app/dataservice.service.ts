@@ -16,7 +16,9 @@ export class DataserviceService {
   userID: BehaviorSubject<any> = new BehaviorSubject("");
   IDX: BehaviorSubject<any> = new BehaviorSubject(null);
   constructor(private http: HttpClient) { }
-  baseURL = "http://rdcquonapp001.chi.catholichealth.net:8090/api"
+  //baseURL = "http://localhost:8085/api"
+  //baseURL = "http://rdcquonapp001.chi.catholichealth.net:8085/api"
+  baseURL = "https://rdcquonapp001.chi.catholichealth.net/api"
   getRole() {
     this.userRole.subscribe((dt) => {
       return dt
@@ -70,13 +72,17 @@ export class DataserviceService {
     return this.http.post<any>(this.baseURL+"/emr", emr)
   }
 
-  getDataHospital(selectedRegion, hospitalName) {
-    return this.http.post<any>(this.baseURL+"/hospital", { selectedRegion, hospitalName })
+  getDataState(selectedRegion, state) {
+    return this.http.post<any>(this.baseURL+"/state", { selectedRegion, state })
+  }
+
+  getDataHospital(selectedRegion, state, hospitalName) {
+    return this.http.post<any>(this.baseURL+"/hospital", { selectedRegion, state, hospitalName })
   }
 
 
-  getDataDept(selectedRegion, hospital, department) {
-    return this.http.post<any>(this.baseURL+"/department", {selectedRegion, hospital, department })
+  getDataDept(selectedRegion, state, hospital, department) {
+    return this.http.post<any>(this.baseURL+"/department", {selectedRegion, state, hospital, department })
   }
 
   createRecord(record) {

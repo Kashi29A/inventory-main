@@ -50,6 +50,8 @@ export class DatatableComponent implements OnInit {
 
   selectedRegion;
 
+  selectedState;
+
   selectedEMR;
 
   selectedHospital;
@@ -57,6 +59,8 @@ export class DatatableComponent implements OnInit {
   selectedDept;
 
   disabledHospital: boolean = true;
+
+  disabledState: boolean = true;
 
   disabledDept: boolean = true;
 
@@ -75,6 +79,8 @@ export class DatatableComponent implements OnInit {
   globalFilter: string;
 
   RegionArr: any[];
+
+  StateArr: any[];
 
   disableRegion: boolean = true;
 
@@ -96,19 +102,10 @@ export class DatatableComponent implements OnInit {
       { field: 'Bed', header: 'Bed' },
       { field: 'DeviceID', header: 'Device ID' },
       { field: 'DeviceName', header: 'Device Name' },
-      { field: 'BioMedAssetID', header: 'Bio Med Asset ID' },
-      { field: 'Fixed', header: 'Fixed' },
-      { field: 'LWS', header: 'LWS' },
       { field: 'MPIID', header: 'MPI ID' },
       { field: 'AIP', header: 'AIP' },
-      { field: 'AIPConDetails', header: 'AIP Con Details' },
-      { field: 'VCGGrouper', header: 'VCG Grouper' },
-      { field: 'Vendor', header: 'Vendor' },
       { field: 'Contacts', header: 'Contacts' },
-      { field: 'ServerTypeName', header: 'Server Type Name' },
-      { field: 'ServerConDetails', header: 'Server Con Details' },
-      { field: 'ServerContent', header: 'Server Content' },
-      { field: 'SoftwareOSDetails', header: 'Software OS Details' },
+      { field: 'ServerConDetails', header: 'Remote Desktop' },
       { field: 'DataflowDiagram', header: 'Dataflow Diagram' },
       { field: 'Workflow', header: 'Workflow' },
       { field: 'TroubleshootingDocs', header: 'Troubleshooting Docs' },
@@ -126,7 +123,7 @@ export class DatatableComponent implements OnInit {
       console.log(data)
       if (data.length > 0) {
         let result = data.map(({ Region }) => Region)
-        this.RegionArr = [...new Set(result)]
+        this.RegionArr = [...new Set(result)].sort(Intl.Collator().compare)
       }
       this.selectedDept = null;
       this.selectedHospital = null;
@@ -135,7 +132,8 @@ export class DatatableComponent implements OnInit {
       this.disabledDept = true;
       this.disabledHospital = true;
       this.disableRegion = true;
-      this.additionalComments = ""
+      this.additionalComments = "";
+      this.disabledState = true;
     })
    // this.removeFilters("Refresh")
   }
@@ -202,7 +200,7 @@ export class DatatableComponent implements OnInit {
   saveProduct() {
     this.submitted = true;
     if(this.additionalComments.trim()) {
-      this.record.Comments = this.record.Comments + " " + this.additionalComments
+      this.record.Comments = this.record.Comments ? this.record.Comments + " " + this.additionalComments : this.additionalComments ? this.additionalComments: "";
     }
     if (this.record.Hospital.trim()) {
      // this.record.EMR = "Epic";
@@ -216,8 +214,10 @@ export class DatatableComponent implements OnInit {
           this.selectedDept = null;
           this.selectedHospital = null;
           this.selectedEMR = null;
+          this.selectedState = null;
           this.disabledDept = true;
           this.disabledHospital = true;
+          this.disabledState = true;
           this.globalFilter = null;
           this.additionalComments = ""
           this.removeFilters("refresh")
@@ -301,6 +301,7 @@ export class DatatableComponent implements OnInit {
   // }
 
   handleChangeRegion(e) {
+    this.selectedState = null;
     this.selectedHospital = null;
     this.selectedDept = null;
     this.disabledNew = true;
@@ -311,9 +312,32 @@ export class DatatableComponent implements OnInit {
         this.fhs = data
         this.tabledata = data
         if (this.tabledata.length > 0) {
+          this.disabledState = false;
+          let result = this.tabledata.map(({ State }) => State)
+          this.StateArr = [...new Set(result)].sort(Intl.Collator().compare)
+        }
+      })
+
+    }
+    if (!this.selectedState) {
+      this.disabledHospital = true
+    }
+  }
+
+  handleChangeState(e) {
+    this.selectedHospital = null;
+    this.selectedDept = null;
+    this.disabledNew = true;
+    this.tabledata = []
+    if (e.value) {
+      this.dataService.getDataState(this.selectedRegion, this.selectedState).subscribe((data) => {
+        console.log(data)
+        this.fhs = data
+        this.tabledata = data
+        if (this.tabledata.length > 0) {
           this.disabledHospital = false;
           let result = this.tabledata.map(({ Hospital }) => Hospital)
-          this.hospitalList = [...new Set(result)]
+          this.hospitalList = [...new Set(result)].sort(Intl.Collator().compare)
         }
       })
 
@@ -327,13 +351,13 @@ export class DatatableComponent implements OnInit {
     this.selectedDept = null;
     if (this.selectedHospital) {
       //this.tabledata = []
-      this.dataService.getDataHospital(this.selectedRegion, this.selectedHospital)
+      this.dataService.getDataHospital(this.selectedRegion, this.selectedState, this.selectedHospital)
         .subscribe(data => {
           console.log(data)
           this.tabledata = data
           if (this.tabledata.length > 0) {
             let result = this.tabledata.map(({ Department }) => Department)
-            this.deptList = [...new Set(result)]
+            this.deptList = [...new Set(result)].sort(Intl.Collator().compare)
           }
         })
       this.disabledDept = false
@@ -344,7 +368,7 @@ export class DatatableComponent implements OnInit {
     if (this.selectedHospital) {
       this.disabledDept = false
       this.disabledNew = false;
-      this.dataService.getDataDept(this.selectedRegion, this.selectedHospital, this.selectedDept)
+      this.dataService.getDataDept(this.selectedRegion, this.selectedState, this.selectedHospital, this.selectedDept)
         .subscribe(data => {
           console.log(data)
           this.tabledata = data
@@ -358,8 +382,9 @@ export class DatatableComponent implements OnInit {
       console.log(data)
       if (data.length > 0) {
         let result = this.tabledata.map(({ Region }) => Region)
-        this.RegionArr = [...new Set(result)]
+        this.RegionArr = [...new Set(result)].sort(Intl.Collator().compare);
       }
+      this.selectedState = null;
       this.selectedDept = null;
       this.selectedHospital = null;
       this.selectedEMR = null;
@@ -367,6 +392,7 @@ export class DatatableComponent implements OnInit {
       this.disabledDept = true;
       this.disabledHospital = true;
       this.disableRegion = true;
+      this.disabledState = true
       this.additionalComments = ""
     })
   }

@@ -6,5 +6,6 @@ export interface FHS {
     Department?:string,
     AdditionalDocURLs?: string,
     Region?: string,
-    Comments? : string
+    Comments? : string,
+    State? : string
 }
