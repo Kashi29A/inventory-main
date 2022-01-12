@@ -513,7 +513,9 @@
 
         <div class="p-field details"> <a target="_blank" href="{{'https://rdcquonapp001.chi.catholichealth.net/rdp/?srvname=' + record.ServerConDetails}}">Remote Desktop</a> &nbsp;
         </div>
-        <div class="p-field details"> <a target="_blank" href="{{record.ServerTypeName}}">Capsule / Excel URL</a> &nbsp;
+        <div *ngIf="record.ServerTypeName" class="p-field details"> <a target="_blank" href="{{record.ServerTypeName}}">Capsule / Excel URL</a> &nbsp;
+        </div>
+        <div *ngIf="!record.ServerTypeName" class="p-field details">Capsule / Excel URL &nbsp;
         </div>
         <!-- <div class="p-field details">
             <label for="name"><b>Server Content: </b></label> {{record.ServerContent}} &nbsp;
@@ -528,7 +530,7 @@
         <div class="p-field details"><a target="_blank" href={{record.TroubleshootingDocs}}>Support</a> &nbsp;
         </div>
         <div class="p-field details">
-            <label for="name"><b>SNOW Search</b></label><a href="https://sm.commonspirit.org/nav_to.do?uri=%2Fincident_list.do%3Fsysparm_first_row=1&sysparm_query=GOTO123TEXTQUERY321={{record.DeviceName}}" target="_blank">Snow Seach</a>&nbsp;
+           <a href="https://sm.commonspirit.org/nav_to.do?uri=%2Fincident_list.do%3Fsysparm_first_row=1&sysparm_query=GOTO123TEXTQUERY321={{record.DeviceName}}" target="_blank">Snow Seach</a>&nbsp;
         </div>
         <div class="p-field details">
             <label for="name"><b>Comments:</b> </label> {{record.Comments}}&nbsp;
