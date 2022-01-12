@@ -250,10 +250,10 @@
             <small class="p-error" *ngIf="submitted && !record.Contacts">Contacts are required.</small>
         </div>
         <div class="p-field">
-            <label for="ServerTypeName">Server Name</label> &nbsp;
+            <label for="ServerTypeName">Capsule / Excel URL</label> &nbsp;
             <input style="margin-top: 5px;" type="text" pInputText id="ServerTypeName"
                 [(ngModel)]="record.ServerTypeName" required autofocus />
-            <small class="p-error" *ngIf="submitted && !record.ServerTypeName">Server Name is required.</small>
+            <small class="p-error" *ngIf="submitted && !record.ServerTypeName">Capsule / Excel URL is required.</small>
         </div>
         <div class="p-field">
             <label for="ServerConDetails">Remote Desktop</label> &nbsp;
@@ -513,7 +513,7 @@
 
         <div class="p-field details"> <a target="_blank" href="{{'https://rdcquonapp001.chi.catholichealth.net/rdp/?srvname=' + record.ServerConDetails}}">Remote Desktop</a> &nbsp;
         </div>
-        <div class="p-field details"> <a target="_blank" href="{{record.ServerTypeName}}">Capsule / Excel URLs</a> &nbsp;
+        <div class="p-field details"> <a target="_blank" href="{{record.ServerTypeName}}">Capsule / Excel URL</a> &nbsp;
         </div>
         <!-- <div class="p-field details">
             <label for="name"><b>Server Content: </b></label> {{record.ServerContent}} &nbsp;
