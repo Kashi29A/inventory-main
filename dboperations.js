@@ -172,7 +172,7 @@ async function updateData(record) {
             // .input('VCGGrouper', record.VCGGrouper)
             // .input('Vendor', record.Vendor)
             .input('Contacts', record.Contacts)
-            // .input('ServerTypeName', record.ServerTypeName)
+            .input('ServerTypeName', record.ServerTypeName)
             .input('ServerConDetails', record.ServerConDetails)
             //  .input('ServerContent', record.ServerContent)
             //  .input('SoftwareOSDetails', record.SoftwareOSDetails)
@@ -182,7 +182,7 @@ async function updateData(record) {
             .query(`UPDATE MDIDetails SET Hospital = @Hospital, Region = @Region,
             State = @State, Department = @Department, Room = @Room, Bed = @Bed, DeviceID = @DeviceID,
             DeviceName = @DeviceName, MPIID = @MPIID, AIP = @AIP, Contacts = @Contacts, ServerConDetails = @ServerConDetails, DataflowDiagram = @DataflowDiagram,
-            TroubleshootingDocs = @TroubleshootingDocs, Comments = @Comments  
+            TroubleshootingDocs = @TroubleshootingDocs, Comments = @Comments, ServerTypeName = @ServerTypeName  
             WHERE IDX = @IDX; Select * from MDIDetails Order By Hospital ASC`)
         return product.recordsets;
     } catch (error) {
@@ -236,7 +236,7 @@ async function createRecord(record) {
             //  .input('VCGGrouper', record.VCGGrouper)
             //  .input('Vendor', record.Vendor)
             .input('Contacts', record.Contacts)
-            // .input('ServerTypeName', record.ServerTypeName)
+            .input('ServerTypeName', record.ServerTypeName)
             .input('ServerConDetails', record.ServerConDetails)
             // .input('ServerContent', record.ServerContent)
             // .input('SoftwareOSDetails', record.SoftwareOSDetails)
@@ -246,9 +246,9 @@ async function createRecord(record) {
             .query(`INSERT INTO MDIDetails (Region, State, Hospital, Department, Room,  Bed,
                 DeviceID, DeviceName, MPIID, AIP, Contacts,
                 ServerConDetails, DataflowDiagram, TroubleshootingDocs, 
-                Comments) VALUES (@Region, @State, @Hospital, @Department, @Room, @Bed, 
+                Comments, ServerTypeName) VALUES (@Region, @State, @Hospital, @Department, @Room, @Bed, 
                     @DeviceID, @DeviceName, @MPIID, @AIP, @Contacts, @ServerConDetails, @DataflowDiagram, @TroubleshootingDocs,
-                    @Comments)`);
+                    @Comments, @ServerTypeName)`);
         return insertProduct.recordsets;
 
     } catch (err) {
